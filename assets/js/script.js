@@ -26,14 +26,31 @@ var allQuestions = [{
 ];
 
 var questionTitle = document.querySelector("#currentQuestion");
-var answerSelection = document.querySelector("#currentAnswers");
-var button = document.querySelector("#startButton");
-// var answers = document.querySelector("#option");
+
+var startButton = document.querySelector("#startButton");
+var nextButton = document.getElementById('nextButton');
+var selectedAnswer = document.querySelector("#answerButton");
 
 
-// button.addEventListener("click", function(event){
-//     var answers = document.querySelector("#option");
-//     button = event.target;
-//     button.textContent = "hello";
 
-// });
+
+
+
+// What happens when we click the start button. Starts the game
+function startGame(){
+    console.log("Started game");
+}
+
+// Advances to the next question. Clicking on the next button
+var nextQuestion = function(){
+    console.log("Next Question please");
+}
+
+// When we select an answer
+var selectAnswer = function(){
+    console.log("Selected an answer");
+}
+
+nextButton.addEventListener("click", nextQuestion);
+startButton.addEventListener("click", startGame);
+selectedAnswer.addEventListener("click", selectAnswer);
