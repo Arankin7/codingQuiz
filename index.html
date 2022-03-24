@@ -12,17 +12,22 @@
         <h1>Coding Knowledge Quiz</h1>
     </header>
     <main>
-        <h2 id="currentQuestion"></h2>
-        <section>
-            <ul id="currentAnswers">
-                <li class="option" id="answerA" data-answer="false"></li>
-                <li class="option" id="answerB" data-answer="false"></li>
-                <li class="option" id="answerC" data-answer="false"></li>
-                <li class="option" id="answerD" data-answer="false"></li>
-            </ul>
-        </section>
-
-        <button id="startButton">Start</button>
+        <section class="container">
+            <div id="questionContainer" class="hidden">
+                <h2 id="currentQuestion">Question?</h2>
+                <div id="answerButton" class="answerList">
+                    <button class="btn">A</button>
+                    <button class="btn">B</button>
+                    <button class="btn">C</button>
+                    <button class="btn">D</button>
+                </div>                
+            </div>
+        
+            <div class="controls">
+                <button id="startButton" class="startButton btn">Start</button>
+                <button id="nextButton" class="nextButton btn hidden">Next</button>
+            </div>
+    </section>
 
     </main> 
     <script src="./assets/js/script.js"></script>

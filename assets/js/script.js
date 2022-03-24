@@ -31,9 +31,9 @@ var button = document.querySelector("#startButton");
 // var answers = document.querySelector("#option");
 
 
-button.addEventListener("click", function(event){
-    var answers = document.querySelector("#option");
-    button = event.target;
-    button.textContent = "hello";
+// button.addEventListener("click", function(event){
+//     var answers = document.querySelector("#option");
+//     button = event.target;
+//     button.textContent = "hello";
 
-});
+// });
