@@ -40,18 +40,27 @@ var allQuestions = [{
     }
 ];
 
-var questionContainer = document.querySelector("#questionContainer");
 var mixedQuestions, currentQuestionIndex;
-const questionEl = document.getElementById('currentQuestion');
+
 var timeLeft;
 var timeInterval;
 var quizScore; 
 
-
+var nameInput = document.querySelector("#name");
+var highScoreEl = document.querySelector("#highScore");
+var questionContainer = document.querySelector("#questionContainer");
+const questionEl = document.getElementById('currentQuestion');
 var startButton = document.querySelector("#startButton");
 var nextButton = document.getElementById('nextButton');
 var answerEl = document.querySelector("#answerButton");
 var timerEl = document.querySelector("#countdown");
+
+function pullHighScore(){
+    window.localStorage.getItem('user');
+    JSON.parse(window.localStorage.getItem('user'));
+}
+
+
 // Timer function
 function countdown() {
     timeLeft = 59;
@@ -67,12 +76,37 @@ function countdown() {
             endGame();
         }
     }, 1000);
-}
+};
+
+function saveScore(){
+    
+    var highScore = {
+        score: window.localStorage.getItem('user').score
+    };
+
+    if (quizScore > highScore.score){
+        highScore.name = window.prompt("Enter your name")
+
+        highScore.score = quizScore;
+        window.alert("Great Job! You got a new High Score!")
+
+        window.localStorage.setItem('user', JSON.stringify(highScore));
+
+    }
+    else if(quizScore < highScore.score){
+        window.alert("Almost! Try again for the High Score")
+    }
+};
+
+// Ends the game
 function endGame (){
+    resetState();
     questionEl.textContent = ("Your score is " + quizScore);
+    startButton.classList.remove('hidden');
+    startButton.textContent = 'Retry?';
     clearInterval(timeInterval);
-     
-}
+    saveScore();  
+};
 
 // What happens when we click the start button. Starts the game
 function startGame(){
@@ -87,7 +121,7 @@ function startGame(){
     mixedQuestions = allQuestions.sort(() => Math.random() - .5);
     currentQuestionIndex = 0;
     nextQuestion();
-}
+};
 
 // Advances to the next question. Clicking on the next button
 function nextQuestion(){
@@ -102,7 +136,7 @@ function resetState(){
     while (answerEl.firstChild){
         answerEl.removeChild(answerEl.firstChild)
     }
-}
+};
 
 // When we select an answer
 var selectAnswer = function(event){
@@ -137,8 +171,7 @@ var selectAnswer = function(event){
     else {
         // END THE GAME
         endGame();
-        startButton.classList.remove('hidden');
-        startButton.textContent = 'Retry?';
+        
     }
 }
 
@@ -179,5 +212,6 @@ nextButton.addEventListener("click", () => {
     nextQuestion();
 });
 
+pullHighScore();
 startButton.addEventListener("click", startGame);
 answerEl.addEventListener("click", selectAnswer);

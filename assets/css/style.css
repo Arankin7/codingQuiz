@@ -40,11 +40,13 @@ main {
     flex: 1 1 100%;
     max-width: 80%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
 .container {
+    flex: 1 1 100%;
     text-align: center;
     width: 80%;
     background-color: blanchedalmond;
@@ -60,6 +62,16 @@ main {
     align-items: center;
     gap: 10px;
     margin: 15px 0;
+}
+
+.scoreContainer {
+    margin: 0 25vw;
+    padding: 0;
+    background-color: burlywood;
+}
+
+#name {
+    border-radius: 3px;
 }
 
 .btn {
