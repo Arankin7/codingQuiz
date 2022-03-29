@@ -41,11 +41,11 @@ var allQuestions = [{
 ];
 
 var questionContainer = document.querySelector("#questionContainer");
-
 var mixedQuestions, currentQuestionIndex;
-
 const questionEl = document.getElementById('currentQuestion');
-var timeLeft = 59;
+var timeLeft;
+var timeInterval;
+var quizScore; 
 
 
 var startButton = document.querySelector("#startButton");
@@ -54,25 +54,29 @@ var answerEl = document.querySelector("#answerButton");
 var timerEl = document.querySelector("#countdown");
 // Timer function
 function countdown() {
+    timeLeft = 59;
 
-    var timeInterval = setInterval(function(){
-        if (timeLeft > 1){
-            timerEl.textContent = timeLeft;
-            timeLeft--;
-        }
-        else if(timeLeft === 1){
+    timeInterval = setInterval(function(){
+        quizScore = timeLeft;
+        if (timeLeft >= 1){
             timerEl.textContent = timeLeft;
             timeLeft--;
         }
         else{
             timerEl.textContent = "Time Up!";
-            clearInterval(timeInterval);
+            endGame();
         }
     }, 1000);
+}
+function endGame (){
+    questionEl.textContent = ("Your score is " + quizScore);
+    clearInterval(timeInterval);
+     
 }
 
 // What happens when we click the start button. Starts the game
 function startGame(){
+    timeInterval = 59;
     console.log("Started game");
     startButton.classList.add('hidden');
     questionContainer.classList.remove('hidden');
@@ -92,15 +96,18 @@ function nextQuestion(){
     revealQuestion(mixedQuestions[currentQuestionIndex]);   
 }
 
+// resets the sate of the questions/answers
 function resetState(){
     nextButton.classList.add('hidden');
     while (answerEl.firstChild){
         answerEl.removeChild(answerEl.firstChild)
     }
 }
+
 // When we select an answer
 var selectAnswer = function(event){
-    console.log("Selected an answer");
+    
+    console.log(quizScore);
 
     const selectedButton = event.target;
     // const correctAnswer = selectedButton.dataset.correct;
@@ -112,14 +119,14 @@ var selectAnswer = function(event){
     //     setClassStatus(answButton, answButton.dataset.correct)
     // });
 
+    // If a correct answer is chosen
     if(selectedButton.dataset.correct){
-        console.log("Correct");
         timeLeft = timeLeft + 5;
         questionEl.textContent = ("Correct!");
         questionEl.classList.add('correct');
     }
+    // If a wrong answer is chosen
     else if(!selectedButton.dataset.correct){
-        console.log("Wrong");
         timeLeft = timeLeft - 5;
         questionEl.textContent = ("Wrong!");
     }
@@ -129,12 +136,10 @@ var selectAnswer = function(event){
     }
     else {
         // END THE GAME
-
-        // nextButton.classList.add('hidden');
+        endGame();
         startButton.classList.remove('hidden');
         startButton.textContent = 'Retry?';
     }
-
 }
 
 function setClassStatus (element, correct){
