@@ -46,6 +46,8 @@ var timeLeft;
 var timeInterval;
 var quizScore; 
 
+
+
 var nameInput = document.querySelector("#name");
 var highScoreEl = document.querySelector("#highScore");
 var questionContainer = document.querySelector("#questionContainer");
@@ -55,10 +57,7 @@ var nextButton = document.getElementById('nextButton');
 var answerEl = document.querySelector("#answerButton");
 var timerEl = document.querySelector("#countdown");
 
-function pullHighScore(){
-    window.localStorage.getItem('user');
-    JSON.parse(window.localStorage.getItem('user'));
-}
+var highScore = JSON.parse(localStorage.getItem('highScore'));
 
 
 // Timer function
@@ -78,22 +77,20 @@ function countdown() {
     }, 1000);
 };
 
+
+
 function saveScore(){
-    
-    var highScore = {
-        score: window.localStorage.getItem('user').score
+    var score = {
+        score: quizScore,
     };
-
-    if (quizScore > highScore.score){
-        highScore.name = window.prompt("Enter your name")
-
-        highScore.score = quizScore;
-        window.alert("Great Job! You got a new High Score!")
-
-        window.localStorage.setItem('user', JSON.stringify(highScore));
-
+    let currentHighScore = JSON.stringify(score);
+    localStorage.setItem('highScore', currentHighScore);
+    
+    if (score.score > highScore.score || !highScore.score){
+        // score.name = window.prompt("Enter your name")
+        window.alert("Great Job! You got a new High Score!")  
     }
-    else if(quizScore < highScore.score){
+    else if(score.score < highScore.score){
         window.alert("Almost! Try again for the High Score")
     }
 };
@@ -105,7 +102,7 @@ function endGame (){
     startButton.classList.remove('hidden');
     startButton.textContent = 'Retry?';
     clearInterval(timeInterval);
-    saveScore();  
+    saveScore(); 
 };
 
 // What happens when we click the start button. Starts the game
@@ -115,7 +112,7 @@ function startGame(){
     startButton.classList.add('hidden');
     questionContainer.classList.remove('hidden');
     nextButton.classList.remove('hidden'); 
-    
+
     countdown();
 
     mixedQuestions = allQuestions.sort(() => Math.random() - .5);
@@ -171,7 +168,6 @@ var selectAnswer = function(event){
     else {
         // END THE GAME
         endGame();
-        
     }
 }
 
@@ -212,6 +208,7 @@ nextButton.addEventListener("click", () => {
     nextQuestion();
 });
 
-pullHighScore();
+
 startButton.addEventListener("click", startGame);
 answerEl.addEventListener("click", selectAnswer);
+highScoreEl.textContent = ("High Score: " + highScore.score);
