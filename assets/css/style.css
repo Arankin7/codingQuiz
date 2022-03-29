@@ -29,6 +29,13 @@ header {
     text-align: center;
 }
 
+#countdown {
+    background: black;
+    color: white;
+    border-radius: 3px;
+    display: inline;
+}
+
 main {
     flex: 1 1 100%;
     max-width: 80%;

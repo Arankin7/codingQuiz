@@ -45,18 +45,40 @@ var questionContainer = document.querySelector("#questionContainer");
 var mixedQuestions, currentQuestionIndex;
 
 const questionEl = document.getElementById('currentQuestion');
+var timeLeft = 59;
 
 
 var startButton = document.querySelector("#startButton");
 var nextButton = document.getElementById('nextButton');
 var answerEl = document.querySelector("#answerButton");
+var timerEl = document.querySelector("#countdown");
+// Timer function
+function countdown() {
+
+    var timeInterval = setInterval(function(){
+        if (timeLeft > 1){
+            timerEl.textContent = timeLeft;
+            timeLeft--;
+        }
+        else if(timeLeft === 1){
+            timerEl.textContent = timeLeft;
+            timeLeft--;
+        }
+        else{
+            timerEl.textContent = "Time Up!";
+            clearInterval(timeInterval);
+        }
+    }, 1000);
+}
 
 // What happens when we click the start button. Starts the game
 function startGame(){
     console.log("Started game");
     startButton.classList.add('hidden');
     questionContainer.classList.remove('hidden');
-    nextButton.classList.remove('hidden');  
+    nextButton.classList.remove('hidden'); 
+    
+    countdown();
 
     mixedQuestions = allQuestions.sort(() => Math.random() - .5);
     currentQuestionIndex = 0;
@@ -81,21 +103,38 @@ var selectAnswer = function(event){
     console.log("Selected an answer");
 
     const selectedButton = event.target;
-    const correctAnswer = selectedButton.dataset.correct;
+    // const correctAnswer = selectedButton.dataset.correct;
 
-    setClassStatus(document.body, correctAnswer);
-    Array.from(answerEl.children).forEach(answButton => {
-        setClassStatus(answButton, answButton.dataset.correct)
-    });
+    resetState();
+
+    // setClassStatus(document.body, correctAnswer);
+    // Array.from(answerEl.children).forEach(answButton => {
+    //     setClassStatus(answButton, answButton.dataset.correct)
+    // });
+
+    if(selectedButton.dataset.correct){
+        console.log("Correct");
+        timeLeft = timeLeft + 5;
+        questionEl.textContent = ("Correct!");
+        questionEl.classList.add('correct');
+    }
+    else if(!selectedButton.dataset.correct){
+        console.log("Wrong");
+        timeLeft = timeLeft - 5;
+        questionEl.textContent = ("Wrong!");
+    }
 
     if(mixedQuestions.length > currentQuestionIndex + 1){
-        nextButton.classList.remove('hidden')
+        nextButton.classList.remove('hidden');
     }
     else {
+        // END THE GAME
+
         // nextButton.classList.add('hidden');
         startButton.classList.remove('hidden');
         startButton.textContent = 'Retry?';
     }
+
 }
 
 function setClassStatus (element, correct){
@@ -123,7 +162,7 @@ function revealQuestion(allQuestions){
         answButton.textContent = answer.text;
         answButton.classList.add('btn');
         if (answer.correct){
-            answButton.dataset.correct = answer.correct
+            answButton.dataset.correct = answer.correct;
         }
         answButton.addEventListener("click", selectAnswer)
         answerEl.appendChild(answButton);
