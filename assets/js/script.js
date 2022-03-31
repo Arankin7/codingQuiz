@@ -40,16 +40,15 @@ var allQuestions = [{
     }
 ];
 
-var mixedQuestions, currentQuestionIndex;
+var mixedQuestions;
+var currentQuestionIndex;
 
 var timeLeft;
 var timeInterval;
 var quizScore; 
 
-
-
 var nameInput = document.querySelector("#name");
-var highScoreEl = document.querySelector("#highScore");
+var highScoreEl = document.querySelector(".scoreContainer");
 var questionContainer = document.querySelector("#questionContainer");
 const questionEl = document.getElementById('currentQuestion');
 var startButton = document.querySelector("#startButton");
@@ -57,13 +56,15 @@ var nextButton = document.getElementById('nextButton');
 var answerEl = document.querySelector("#answerButton");
 var timerEl = document.querySelector("#countdown");
 
-var highScore = JSON.parse(localStorage.getItem('highScore'));
-
+var highScoreObj = {
+    name: null,
+    score: 1
+}
+var highestScore = JSON.parse(localStorage.getItem('highScore'));
 
 // Timer function
 function countdown() {
     timeLeft = 59;
-
     timeInterval = setInterval(function(){
         quizScore = timeLeft;
         if (timeLeft >= 1){
@@ -78,21 +79,21 @@ function countdown() {
 };
 
 
-
-function saveScore(){
-    var score = {
-        score: quizScore,
-    };
-    let currentHighScore = JSON.stringify(score);
-    localStorage.setItem('highScore', currentHighScore);
-    
-    if (score.score > highScore.score || !highScore.score){
-        // score.name = window.prompt("Enter your name")
-        window.alert("Great Job! You got a new High Score!")  
+function saveScore(highScoreObj){
+    if (!highestScore || quizScore > highestScore.score){
+        highScoreObj = {
+            name: window.prompt("Enter your name", ""),
+            score: quizScore
+        }       
+        window.alert("Great Job! You got a new High Score!");
+        localStorage.setItem('highScore', JSON.stringify(highScoreObj)); 
     }
-    else if(score.score < highScore.score){
+    else if(quizScore === highestScore.score){
+        window.alert("You tied the High Score! Try again!")
+    }
+    else if(quizScore < highestScore.score){
         window.alert("Almost! Try again for the High Score")
-    }
+    }    
 };
 
 // Ends the game
@@ -103,13 +104,17 @@ function endGame (){
     startButton.textContent = 'Retry?';
     clearInterval(timeInterval);
     saveScore(); 
+    highScoreEl.classList.remove('hidden');
+    highScoreEl.textContent = ("High Score: " + highestScore.name + " - " + highestScore.score);   
 };
 
 // What happens when we click the start button. Starts the game
-function startGame(){
+function startGame(){    
+    
     timeInterval = 59;
     console.log("Started game");
     startButton.classList.add('hidden');
+    highScoreEl.classList.add('hidden');
     questionContainer.classList.remove('hidden');
     nextButton.classList.remove('hidden'); 
 
@@ -141,14 +146,7 @@ var selectAnswer = function(event){
     console.log(quizScore);
 
     const selectedButton = event.target;
-    // const correctAnswer = selectedButton.dataset.correct;
-
     resetState();
-
-    // setClassStatus(document.body, correctAnswer);
-    // Array.from(answerEl.children).forEach(answButton => {
-    //     setClassStatus(answButton, answButton.dataset.correct)
-    // });
 
     // If a correct answer is chosen
     if(selectedButton.dataset.correct){
@@ -208,7 +206,5 @@ nextButton.addEventListener("click", () => {
     nextQuestion();
 });
 
-
 startButton.addEventListener("click", startGame);
 answerEl.addEventListener("click", selectAnswer);
-highScoreEl.textContent = ("High Score: " + highScore.score);
