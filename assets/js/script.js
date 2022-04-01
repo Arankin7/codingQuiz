@@ -78,6 +78,17 @@ function countdown() {
     }, 1000);
 };
 
+// Ends the game
+function endGame (){
+    resetState();
+    questionEl.textContent = ("Your score is " + quizScore);
+    startButton.classList.remove('hidden');
+    startButton.textContent = 'Retry?';
+    clearInterval(timeInterval);
+    saveScore(); 
+    highScoreEl.classList.remove('hidden');
+    highScoreEl.textContent = ("High Score: " + highestScore.name + " - " + highestScore.score);   
+};
 
 function saveScore(highScoreObj){
     if (!highestScore || quizScore > highestScore.score){
@@ -94,18 +105,6 @@ function saveScore(highScoreObj){
     else if(quizScore < highestScore.score){
         window.alert("Almost! Try again for the High Score")
     }    
-};
-
-// Ends the game
-function endGame (){
-    resetState();
-    questionEl.textContent = ("Your score is " + quizScore);
-    startButton.classList.remove('hidden');
-    startButton.textContent = 'Retry?';
-    clearInterval(timeInterval);
-    saveScore(); 
-    highScoreEl.classList.remove('hidden');
-    highScoreEl.textContent = ("High Score: " + highestScore.name + " - " + highestScore.score);   
 };
 
 // What happens when we click the start button. Starts the game
@@ -152,7 +151,6 @@ var selectAnswer = function(event){
     if(selectedButton.dataset.correct){
         timeLeft = timeLeft + 5;
         questionEl.textContent = ("Correct!");
-        questionEl.classList.add('correct');
     }
     // If a wrong answer is chosen
     else if(!selectedButton.dataset.correct){
@@ -167,21 +165,6 @@ var selectAnswer = function(event){
         // END THE GAME
         endGame();
     }
-}
-
-function setClassStatus (element, correct){
-    clearClassStatus(element);
-    if(correct){
-        element.classList.add('correct')
-    }
-    else{
-        element.classList.add('wrong')
-    }
-}
-
-function clearClassStatus(element) {
-    element.classList.remove('correct');
-    element.classList.remove('wrong');
 }
 
 function revealQuestion(allQuestions){
